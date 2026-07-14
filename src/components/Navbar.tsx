@@ -2,17 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Search,
-  CircleUser,
-  House,
-  Heart,
-  Bookmark,
-} from "lucide-react";
-import { usePathname } from "next/navigation";
+import { Search, CircleUser, House, Heart, Bookmark, X, } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+
 
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const navItems = [
     { name: "Home", href: "/", icon: House },
@@ -20,6 +17,45 @@ const Navbar = () => {
     { name: "Watchlist", href: "/watchlist", icon: Bookmark },
     { name: "Profile", href: "/profile", icon: CircleUser },
   ];
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const searchParams = useSearchParams();
+  const currentQuery = searchParams.get("query") ?? "";
+
+  useEffect(() => {
+    setSearchQuery(currentQuery);
+  }, [currentQuery]);
+
+  const showClearButton =
+    currentQuery !== "" &&
+    searchQuery.trim() === currentQuery;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = () => {
+    const query = searchQuery.trim();
+
+    if (!query) {
+      router.push("/");
+      return;
+    }
+
+    router.push(`/?query=${encodeURIComponent(query)}`);
+  };
+
+  const handleClear = () => {
+    setSearchQuery("");
+    router.push("/");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   const placeholder =
     pathname === "/favorites"
@@ -56,32 +92,40 @@ const Navbar = () => {
           {/* Mobile */}
           <div className="mx-auto flex w-full max-w-[220px] items-center rounded-full border border-green-900 bg-neutral-900 px-3 py-2 transition focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/20 sm:hidden">
             <input
+              value={searchQuery}
+              onChange={(e) => handleChange(e)}
+              onKeyDown={(e) => handleKeyDown(e)}
               type="text"
               placeholder="Search..."
               className="flex-1 min-w-0 bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
             />
 
             <button
+              onClick={showClearButton ? handleClear : handleSearch}
               type="button"
               className="ml-2 text-gray-400 transition hover:text-green-500"
             >
-              <Search size={18} />
+              {showClearButton ? <X size={18} /> : <Search size={18} />}
             </button>
           </div>
 
           {/* Desktop */}
           <div className="hidden w-full max-w-xs items-center rounded-full border border-green-900 bg-neutral-900 px-4 py-2 transition focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/20 sm:flex md:max-w-sm lg:max-w-md xl:max-w-xl">
             <input
+              value={searchQuery}
+              onChange={(e) => handleChange(e)}
+              onKeyDown={(e) => handleKeyDown(e)}
               type="text"
               placeholder={placeholder}
               className="flex-1 bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
             />
 
             <button
+              onClick={showClearButton ? handleClear : handleSearch}
               type="button"
               className="ml-2 text-gray-400 transition hover:text-green-500"
             >
-              <Search size={20} />
+              {showClearButton ? <X size={18} /> : <Search size={18} />}
             </button>
           </div>
         </div>
