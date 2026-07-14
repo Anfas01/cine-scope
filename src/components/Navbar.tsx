@@ -58,7 +58,7 @@ const Navbar = () => {
             <input
               type="text"
               placeholder="Search..."
-              className="flex-1 bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
+              className="flex-1 min-w-0 bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
             />
 
             <button
