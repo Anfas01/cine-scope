@@ -14,11 +14,6 @@ const Nav = () => {
       label: "Home",
     },
     {
-      href: "/favorites",
-      icon: Heart,
-      label: "Favorites",
-    },
-    {
       href: "/watchlist",
       icon: Bookmark,
       label: "Watchlist",

@@ -13,7 +13,6 @@ export default function MainLayout({
         <Navbar />
       </Suspense>
       {children}
-      <Nav />
     </>
   );
 }

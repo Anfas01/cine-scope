@@ -30,7 +30,7 @@ export default function LoginPage() {
           </h1>
 
           <p className="mt-3 text-center text-sm text-zinc-400">
-            Sign in to continue exploring movies.
+            Login to continue exploring movies.
           </p>
         </div>
 
