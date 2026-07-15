@@ -4,42 +4,72 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Search,
-  CircleUser,
   House,
   Bookmark,
   X,
+  ChevronDown,
+  Settings,
+  LogOut,
 } from "lucide-react";
 import {
   usePathname,
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 
 const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const navItems = [
     { name: "Home", href: "/", icon: House },
     { name: "Watchlist", href: "/watchlist", icon: Bookmark },
-    { name: "Account", href: "/account", icon: CircleUser },
   ];
 
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const searchParams = useSearchParams();
   const currentQuery = searchParams.get("query") ?? "";
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [accountOpen, setAccountOpen] = useState(false);
+
+  const accountRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
     setSearchQuery(currentQuery);
   }, [currentQuery]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        accountRef.current &&
+        !accountRef.current.contains(event.target as Node)
+      ) {
+        setAccountOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+    };
+  }, []);
+
   const showClearButton =
     currentQuery !== "" &&
     searchQuery.trim() === currentQuery;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setSearchQuery(e.target.value);
 
     if (e.target.value === "") {
@@ -75,13 +105,12 @@ const Navbar = () => {
     pathname === "/favorites"
       ? "Search favorites..."
       : pathname === "/watchlist"
-      ? "Search watchlist..."
-      : "Search movies...";
+        ? "Search watchlist..."
+        : "Search movies...";
 
   return (
     <header className="sticky top-0 z-50 border-b border-green-900/40 bg-black/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-3 sm:h-18 sm:px-5">
-
         {/* Logo */}
         <Link
           href="/"
@@ -110,12 +139,20 @@ const Navbar = () => {
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               type="text"
-              placeholder={pathname === "/" ? "Search movies..." : placeholder}
+              placeholder={
+                pathname === "/"
+                  ? "Search movies..."
+                  : placeholder
+              }
               className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
             />
 
             <button
-              onClick={showClearButton ? handleClear : handleSearch}
+              onClick={
+                showClearButton
+                  ? handleClear
+                  : handleSearch
+              }
               className="ml-2 shrink-0 text-gray-400 transition hover:text-green-500"
             >
               {showClearButton ? (
@@ -130,27 +167,94 @@ const Navbar = () => {
         {/* Navigation */}
         <nav className="shrink-0">
           <ul className="flex items-center gap-1 sm:gap-2">
-            {navItems.map(({ name, href, icon: Icon }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  className={`flex items-center gap-2 rounded-lg px-2 py-2 transition-all duration-300 sm:px-3 ${
-                    pathname === href
-                      ? "bg-green-500/15 text-green-500 shadow-[0_0_12px_rgba(34,197,94,0.25)]"
-                      : "text-gray-300 hover:bg-white/5 hover:text-green-500"
-                  }`}
-                >
-                  <Icon size={18} />
+            {navItems.map(
+              ({ name, href, icon: Icon }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className={`flex items-center gap-2 rounded-lg px-2 py-2 transition-all duration-300 sm:px-3 ${
+                      pathname === href
+                        ? "bg-green-500/15 text-green-500 shadow-[0_0_12px_rgba(34,197,94,0.25)]"
+                        : "text-gray-300 hover:bg-white/5 hover:text-green-500"
+                    }`}
+                  >
+                    <Icon size={18} />
 
-                  <span className="hidden xl:block">
-                    {name}
-                  </span>
-                </Link>
-              </li>
-            ))}
+                    <span className="hidden xl:block">
+                      {name}
+                    </span>
+                  </Link>
+                </li>
+              )
+            )}
+
+            {/* Account */}
+            <li
+              className="relative"
+              ref={accountRef}
+            >
+              <button
+                onClick={() =>
+                  setAccountOpen(!accountOpen)
+                }
+                className="flex items-center gap-2 rounded-lg px-2 py-2 text-gray-300 transition-all duration-300 hover:bg-white/5 hover:text-green-500 sm:px-3"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-sm font-bold text-black">
+                  JD
+                </div>
+
+                <span className="hidden xl:block">
+                  Account
+                </span>
+
+                <ChevronDown
+                  size={16}
+                  className={`hidden transition duration-300 xl:block ${
+                    accountOpen
+                      ? "rotate-180"
+                      : ""
+                  }`}
+                />
+              </button>
+
+              {accountOpen && (
+                <div className="absolute right-0 mt-3 w-72 overflow-hidden rounded-2xl border border-green-900/40 bg-neutral-950 shadow-2xl shadow-green-900/20">
+                  {/* User */}
+                  <div className="border-b border-white/10 p-5">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-lg font-bold text-black">
+                        JD
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold text-white">
+                          John Doe
+                        </h3>
+
+                        <p className="text-sm text-gray-400">
+                          john@example.com
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Menu */}
+                  <div className="p-2">
+                    <button className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-gray-300 transition hover:bg-white/5 hover:text-green-500">
+                      <Settings size={18} />
+                      Settings
+                    </button>
+
+                    <button className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
+                      <LogOut size={18} />
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              )}
+            </li>
           </ul>
         </nav>
-
       </div>
     </header>
   );
