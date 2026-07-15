@@ -15,7 +15,6 @@ const Navbar = () => {
     { name: "Home", href: "/", icon: House },
     { name: "Favorites", href: "/favorites", icon: Heart },
     { name: "Watchlist", href: "/watchlist", icon: Bookmark },
-    { name: "Profile", href: "/profile", icon: CircleUser },
   ];
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,6 +32,10 @@ const Navbar = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
+
+    if (e.target.value === "") {
+      router.push("/");
+    }
   };
 
   const handleSearch = () => {
