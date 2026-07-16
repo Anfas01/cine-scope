@@ -2,6 +2,7 @@ import { getTrendingMovies, searchMovie } from "@/services/movies.service";
 import MovieCard from "@/components/MovieCard";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import Watchlist from "@/models/watchlistModel";
 
 interface MovieProps {
   id: number;
@@ -23,7 +24,15 @@ export default async function Home({ searchParams }: HomeProps) {
   if (!user) {
     redirect("/login");
   }
-  
+
+  const watchlist = await Watchlist.find({
+    user: user._id,
+  }).select("movieId");
+
+  const watchlistIds = new Set(
+    watchlist.map((movie) => movie.movieId)
+  );
+
   const { query } = await searchParams;
 
   const movies = query?.trim()
@@ -61,7 +70,7 @@ export default async function Home({ searchParams }: HomeProps) {
         {movies.results.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 px-6 pb-24 sm:grid-cols-3 sm:px-0 lg:grid-cols-4">
             {movies.results.map((movie: MovieProps) => (
-              <MovieCard key={movie.id} movie={movie} />
+              <MovieCard key={movie.id} movie={movie} isInWatchlist={watchlistIds.has(movie.id)}/>
             ))}
           </div>
         ) : (

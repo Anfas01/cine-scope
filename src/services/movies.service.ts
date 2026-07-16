@@ -7,5 +7,7 @@ export async function getTrendingMovies() {
 export async function searchMovie(searchQuery: string) {
   if (!searchQuery.trim()) return;
 
-  return tmdbFetch(`/search/movie?query=${searchQuery}`);
+  return tmdbFetch(
+    `/search/movie?query=${encodeURIComponent(searchQuery)}`
+  );
 }

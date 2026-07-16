@@ -25,6 +25,7 @@ import { logout } from "@/actions/logout";
 
 interface NavbarProps {
   user: {
+    id: string;
     name: string;
     email: string;
   } | null;

@@ -4,6 +4,8 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import { IMAGE_BASE_URL } from "@/lib/tmdb";
 import { Bookmark } from "lucide-react";
+import toggleWatchlist from "@/actions/toggleWatchlist";
+import { useState } from "react";
 
 interface MovieCardProps {
   movie: {
@@ -13,14 +15,31 @@ interface MovieCardProps {
     vote_average: number;
     release_date: string;
   };
+  isInWatchlist: boolean;
+  onRemoved?: (movieId: number) => void;
 }
 
-const MovieCard = ({ movie }: MovieCardProps) => {
+const MovieCard = ({ movie, isInWatchlist, onRemoved }: MovieCardProps) => {
 
-  const isMovieInWatchlist = false;
+  const [isMovieInWatchlist, setIsMovieInWatchlist] =
+    useState(isInWatchlist);
 
-  const handleAddToWatchlist = () => {
-    console.log(`${movie.title} Add to watchlist`);
+  const handleWatchlist = async () => {
+    const result = await toggleWatchlist(movie);
+
+    if (!result.success) {
+      alert(result.message);
+      return;
+    }
+
+    if (result.action === "added") {
+      setIsMovieInWatchlist(true);
+    }
+
+    if (result.action === "removed") {
+      setIsMovieInWatchlist(false);
+      onRemoved?.(movie.id);
+    }
   };
 
   return (
@@ -32,7 +51,7 @@ const MovieCard = ({ movie }: MovieCardProps) => {
           alt={movie.title}
           width={500}
           height={750}
-          className="h-[420px] w-full object-cover transition duration-500 group-hover:scale-105"
+          className="h-105 w-full object-cover transition duration-500 group-hover:scale-105"
         />
 
         {/* Rating */}
@@ -56,7 +75,7 @@ const MovieCard = ({ movie }: MovieCardProps) => {
           </div>
 
           <button
-            onClick={() => {handleAddToWatchlist();}}
+            onClick={() => { handleWatchlist(); }}
             className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-transparent bg-neutral-800 text-green-500 transition-all duration-300 hover:border-green-500/30 hover:bg-green-500/10 hover:shadow-[0_0_12px_rgba(34,197,94,0.25)]"
             aria-label="Add to Watchlist"
           >
