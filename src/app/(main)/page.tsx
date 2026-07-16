@@ -1,5 +1,7 @@
 import { getTrendingMovies, searchMovie } from "@/services/movies.service";
 import MovieCard from "@/components/MovieCard";
+import { getCurrentUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 interface MovieProps {
   id: number;
@@ -16,6 +18,12 @@ type HomeProps = {
 };
 
 export default async function Home({ searchParams }: HomeProps) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+  
   const { query } = await searchParams;
 
   const movies = query?.trim()

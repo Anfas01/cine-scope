@@ -3,10 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
-import { useState } from "react";
+import { useActionState, useState } from "react";
+import { register } from "@/actions/register";
+
+const initialState = {
+  error: "",
+};
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
+
+  const [state, formAction, isPending] = useActionState(
+    register,
+    initialState
+  );
 
   return (
     <main className="min-h-screen bg-black flex items-center justify-center px-4 py-8 sm:px-6">
@@ -22,11 +32,8 @@ export default function RegisterPage() {
             className="sm:w-24 sm:h-24"
           />
 
-          <h1 className="mt-5 text-center font-bold leading-tight text-white text-3xl sm:text-4xl">
-            Create{" "}
-            <span className="text-green-500">
-              Account
-            </span>
+          <h1 className="mt-5 text-center text-3xl font-bold leading-tight text-white sm:text-4xl">
+            Create <span className="text-green-500">Account</span>
           </h1>
 
           <p className="mt-3 text-center text-sm text-zinc-400">
@@ -35,7 +42,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Form */}
-        <form className="mt-8 space-y-5">
+        <form action={formAction} className="mt-8 space-y-5">
           <div className="relative">
             <User
               size={18}
@@ -43,8 +50,11 @@ export default function RegisterPage() {
             />
 
             <input
+              name="name"
               type="text"
               placeholder="Full Name"
+              autoComplete="name"
+              required
               className="w-full rounded-xl border border-zinc-700 bg-black py-3.5 pl-12 pr-4 text-white placeholder:text-zinc-500 outline-none transition-all focus:border-green-500"
             />
           </div>
@@ -56,8 +66,11 @@ export default function RegisterPage() {
             />
 
             <input
+              name="email"
               type="email"
               placeholder="Email Address"
+              autoComplete="email"
+              required
               className="w-full rounded-xl border border-zinc-700 bg-black py-3.5 pl-12 pr-4 text-white placeholder:text-zinc-500 outline-none transition-all focus:border-green-500"
             />
           </div>
@@ -69,14 +82,17 @@ export default function RegisterPage() {
             />
 
             <input
+              name="password"
               type={showPassword ? "text" : "password"}
               placeholder="Password"
+              autoComplete="new-password"
+              required
               className="w-full rounded-xl border border-zinc-700 bg-black py-3.5 pl-12 pr-12 text-white placeholder:text-zinc-500 outline-none transition-all focus:border-green-500"
             />
 
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 transition hover:text-green-500"
             >
               {showPassword ? (
@@ -87,11 +103,19 @@ export default function RegisterPage() {
             </button>
           </div>
 
+          {/* Error Message */}
+          {state.error && (
+            <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+              {state.error}
+            </div>
+          )}
+
           <button
             type="submit"
-            className="w-full rounded-xl bg-green-500 py-3.5 font-semibold text-black transition-all duration-200 hover:bg-green-400 active:scale-[0.98]"
+            disabled={isPending}
+            className="w-full rounded-xl bg-green-500 py-3.5 font-semibold text-black transition-all duration-200 hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Create Account
+            {isPending ? "Creating Account..." : "Create Account"}
           </button>
         </form>
 

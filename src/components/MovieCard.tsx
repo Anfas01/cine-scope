@@ -1,6 +1,9 @@
+'use client';
+
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { IMAGE_BASE_URL } from "@/lib/tmdb";
+import { Bookmark } from "lucide-react";
 
 interface MovieCardProps {
   movie: {
@@ -13,6 +16,13 @@ interface MovieCardProps {
 }
 
 const MovieCard = ({ movie }: MovieCardProps) => {
+
+  const isMovieInWatchlist = false;
+
+  const handleAddToWatchlist = () => {
+    console.log(`${movie.title} Add to watchlist`);
+  };
+
   return (
     <div className="group overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:border-green-500 hover:shadow-green-500/20 cursor-pointer">
       {/* Poster */}
@@ -33,18 +43,30 @@ const MovieCard = ({ movie }: MovieCardProps) => {
       </div>
 
       {/* Info */}
-      <div className="space-y-2 p-4">
-        <h2 className="line-clamp-1 text-lg font-bold text-white">
-          {movie.title}
-        </h2>
+      <div className="space-y-4 p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="line-clamp-1 text-lg font-semibold text-white transition-colors group-hover:text-green-400">
+              {movie.title}
+            </h2>
 
-        <div className="flex items-center justify-between text-sm text-gray-400">
-          <span>{movie.release_date.slice(0, 4)}</span>
+            <p className="mt-1 text-sm text-gray-500">
+              {movie.release_date.slice(0, 4)}
+            </p>
+          </div>
 
-          <button className="rounded-lg border border-green-500 px-3 py-1 text-green-400 transition hover:bg-green-500 hover:text-black">
-            Details
+          <button
+            onClick={() => {handleAddToWatchlist();}}
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-transparent bg-neutral-800 text-green-500 transition-all duration-300 hover:border-green-500/30 hover:bg-green-500/10 hover:shadow-[0_0_12px_rgba(34,197,94,0.25)]"
+            aria-label="Add to Watchlist"
+          >
+            <Bookmark size={18} className={isMovieInWatchlist ? "fill-green-500" : ""} />
           </button>
         </div>
+
+        <button className="w-full rounded-xl border border-green-500/40 bg-green-500/10 px-4 py-2 text-sm font-medium text-green-400 transition-all duration-300 hover:border-green-500 hover:bg-green-500 hover:text-black cursor-pointer">
+          View Details
+        </button>
       </div>
     </div>
   );

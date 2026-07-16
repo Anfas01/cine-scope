@@ -21,8 +21,16 @@ import {
   useEffect,
   useRef,
 } from "react";
+import { logout } from "@/actions/logout";
 
-const Navbar = () => {
+interface NavbarProps {
+  user: {
+    name: string;
+    email: string;
+  } | null;
+}
+
+const Navbar = ({ user }: NavbarProps) => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -172,11 +180,10 @@ const Navbar = () => {
                 <li key={href}>
                   <Link
                     href={href}
-                    className={`flex items-center gap-2 rounded-lg px-2 py-2 transition-all duration-300 sm:px-3 ${
-                      pathname === href
+                    className={`flex items-center gap-2 rounded-lg px-2 py-2 transition-all duration-300 sm:px-3 ${pathname === href
                         ? "bg-green-500/15 text-green-500 shadow-[0_0_12px_rgba(34,197,94,0.25)]"
                         : "text-gray-300 hover:bg-white/5 hover:text-green-500"
-                    }`}
+                      }`}
                   >
                     <Icon size={18} />
 
@@ -200,7 +207,7 @@ const Navbar = () => {
                 className="flex items-center gap-2 rounded-lg px-2 py-2 text-gray-300 transition-all duration-300 hover:bg-white/5 hover:text-green-500 sm:px-3"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-sm font-bold text-black">
-                  JD
+                  {user?.name[0].toUpperCase()}
                 </div>
 
                 <span className="hidden xl:block">
@@ -209,11 +216,10 @@ const Navbar = () => {
 
                 <ChevronDown
                   size={16}
-                  className={`hidden transition duration-300 xl:block ${
-                    accountOpen
+                  className={`hidden transition duration-300 xl:block ${accountOpen
                       ? "rotate-180"
                       : ""
-                  }`}
+                    }`}
                 />
               </button>
 
@@ -223,16 +229,19 @@ const Navbar = () => {
                   <div className="border-b border-white/10 p-5">
                     <div className="flex items-center gap-4">
                       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-lg font-bold text-black">
-                        JD
+                        {user?.name[0].toUpperCase()}
                       </div>
 
                       <div>
                         <h3 className="font-semibold text-white">
-                          John Doe
+                          {user && (
+                            user.name.charAt(0).toUpperCase() +
+                            user.name.slice(1).toLowerCase()
+                          )}
                         </h3>
 
                         <p className="text-sm text-gray-400">
-                          john@example.com
+                          {user?.email}
                         </p>
                       </div>
                     </div>
@@ -245,9 +254,9 @@ const Navbar = () => {
                       Settings
                     </button>
 
-                    <button className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
+                    <button onClick={logout} className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
                       <LogOut size={18} />
-                      Sign Out
+                      Log Out
                     </button>
                   </div>
                 </div>
