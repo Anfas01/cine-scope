@@ -36,18 +36,6 @@ export default async function WatchlistPage() {
   return (
     <main className="min-h-screen bg-black px-6 py-10">
       <div className="mx-auto max-w-7xl">
-        {/* Heading */}
-        <div className="mb-8 text-center sm:mb-10 sm:text-left">
-          <h1 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
-            My <span className="text-green-500">Watchlist</span>
-          </h1>
-
-          <p className="mt-3 text-sm text-gray-400 sm:text-base">
-            {movies.length} movie{movies.length !== 1 ? "s" : ""} saved to your
-            watchlist.
-          </p>
-        </div>
-
         <WatchlistGrid initialMovies={movies} />
       </div>
     </main>

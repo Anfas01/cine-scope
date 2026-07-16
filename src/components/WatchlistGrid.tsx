@@ -44,15 +44,28 @@ export default function WatchlistGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 px-6 pb-24 sm:grid-cols-3 sm:px-0 lg:grid-cols-4">
-      {movies.map((movie) => (
-        <MovieCard
-          key={movie.id}
-          movie={movie}
-          isInWatchlist={true}
-          onRemoved={handleMovieRemoved}
-        />
-      ))}
-    </div>
+    <>
+      <div className="mb-8 text-center sm:mb-10 sm:text-left">
+        <h1 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+          My <span className="text-green-500">Watchlist</span>
+        </h1>
+
+        <p className="mt-3 text-sm text-gray-400 sm:text-base">
+          {movies.length} movie{movies.length !== 1 ? "s" : ""} saved to your
+          watchlist.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 px-6 pb-24 sm:grid-cols-3 sm:px-0 lg:grid-cols-4">
+        {movies.map((movie) => (
+          <MovieCard
+            key={movie.id}
+            movie={movie}
+            isInWatchlist={true}
+            onRemoved={handleMovieRemoved}
+          />
+        ))}
+      </div>
+    </>
   );
 }
