@@ -2,6 +2,8 @@ import Image from "next/image";
 import { Bookmark, Calendar, Clock3, Star } from "lucide-react";
 import { getMovieDetails } from "@/services/movies.service";
 import { IMAGE_BASE_URL } from "@/lib/tmdb";
+import WatchlistButton from "@/components/WatchlistButton";
+import { isMovieInWatchlist } from "@/actions/watchlist";
 
 interface MoviePageProps {
   params: Promise<{
@@ -14,9 +16,11 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
   const movie = await getMovieDetails(id);
 
+  const isInWatchlist = await isMovieInWatchlist(movie.id);
+
   return (
     <main className="min-h-screen bg-black text-neutral-200 antialiased selection:bg-green-500 selection:text-black">
-      
+
       {/* Dynamic Ambient Backdrop */}
       <div className="relative h-[30vh] sm:h-[40vh] md:h-[450px] w-full">
         <Image
@@ -32,7 +36,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
       {/* Main Container - Adjusted negative margins seamlessly across breakpoints */}
       <section className="mx-auto -mt-20 sm:-mt-32 md:-mt-48 max-w-6xl px-4 sm:px-6 pb-24 relative z-10">
         <div className="flex flex-col gap-8 md:flex-row items-center md:items-start text-center md:text-left">
-          
+
           {/* Responsive Poster Wrapper */}
           <div className="relative aspect-[2/3] w-full max-w-[220px] sm:max-w-[280px] md:max-w-[300px] shrink-0 overflow-hidden rounded-xl border border-neutral-900 shadow-2xl">
             <Image
@@ -45,13 +49,13 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
           {/* Details Column */}
           <div className="flex-1 space-y-6 sm:space-y-8 w-full flex flex-col items-center md:items-start">
-            
+
             {/* Title & Tagline Group */}
             <div className="w-full">
               <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
                 {movie.title}
               </h1>
-              
+
               {movie.tagline && (
                 <p className="mt-2 text-xs font-semibold tracking-wider text-neutral-500 uppercase">
                   {movie.tagline}
@@ -80,13 +84,16 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
             {/* Action Row: Modern Watchlist button placement */}
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 w-full">
-              <button 
-                className="flex items-center justify-center gap-2 rounded-xl border border-neutral-800 bg-neutral-950 px-5 py-2.5 text-xs sm:text-sm font-semibold tracking-wide text-green-400 transition-all duration-300 hover:border-green-500/40 hover:bg-green-500/5 hover:shadow-[0_0_15px_rgba(34,197,94,0.12)] cursor-pointer group w-full xs:w-auto"
-                aria-label="Add to Watchlist"
-              >
-                <Bookmark size={16} className="transition-transform group-hover:scale-105" />
-                <span>Add to Watchlist</span>
-              </button>
+              <WatchlistButton
+                movie={{
+                  id: movie.id,
+                  title: movie.title,
+                  poster_path: movie.poster_path,
+                  vote_average: movie.vote_average,
+                  release_date: movie.release_date,
+                }}
+                isInWatchlist={isInWatchlist}
+              />
 
               {/* Minimal Micro Genres right alongside actions */}
               <div className="flex flex-wrap justify-center md:justify-start gap-1.5">
