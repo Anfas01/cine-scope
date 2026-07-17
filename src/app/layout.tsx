@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import ToastProvider from "@/components/toast/ToastProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,7 +29,33 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {children}
+        <ToastProvider>
+          {children}
+        </ToastProvider>
+
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              :root {
+                --toast-offset: 80px;
+              }
+
+              @media (max-width: 640px) {
+                :root {
+                  --toast-offset: 90px;
+                }
+              }
+
+              /* Keep the toaster pinned to the right on mobile */
+              @media (max-width: 640px) {
+                [data-sonner-toaster] {
+                  right: 12px !important;
+                  left: auto !important;
+                }
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

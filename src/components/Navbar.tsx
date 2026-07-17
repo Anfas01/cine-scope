@@ -22,6 +22,7 @@ import {
   useRef,
 } from "react";
 import { logout } from "@/actions/logout";
+import { toast } from "sonner";
 
 interface NavbarProps {
   user: {
@@ -110,6 +111,11 @@ const Navbar = ({ user }: NavbarProps) => {
     }
   };
 
+  const handleLogout = async () => {
+    await logout();
+    toast.success("You have been logged out.");
+  };
+
   const placeholder =
     pathname === "/favorites"
       ? "Search favorites..."
@@ -182,8 +188,8 @@ const Navbar = ({ user }: NavbarProps) => {
                   <Link
                     href={href}
                     className={`flex items-center gap-2 rounded-lg px-2 py-2 transition-all duration-300 sm:px-3 ${pathname === href
-                        ? "bg-green-500/15 text-green-500 shadow-[0_0_12px_rgba(34,197,94,0.25)]"
-                        : "text-gray-300 hover:bg-white/5 hover:text-green-500"
+                      ? "bg-green-500/15 text-green-500 shadow-[0_0_12px_rgba(34,197,94,0.25)]"
+                      : "text-gray-300 hover:bg-white/5 hover:text-green-500"
                       }`}
                   >
                     <Icon size={18} />
@@ -218,8 +224,8 @@ const Navbar = ({ user }: NavbarProps) => {
                 <ChevronDown
                   size={16}
                   className={`hidden transition duration-300 xl:block ${accountOpen
-                      ? "rotate-180"
-                      : ""
+                    ? "rotate-180"
+                    : ""
                     }`}
                 />
               </button>
@@ -255,7 +261,7 @@ const Navbar = ({ user }: NavbarProps) => {
                       Settings
                     </button>
 
-                    <button onClick={logout} className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
+                    <button onClick={handleLogout} className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-red-400 transition hover:bg-red-500/10 hover:text-red-300">
                       <LogOut size={18} />
                       Log Out
                     </button>

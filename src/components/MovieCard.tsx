@@ -6,6 +6,7 @@ import { IMAGE_BASE_URL } from "@/lib/tmdb";
 import { Bookmark } from "lucide-react";
 import toggleWatchlist from "@/actions/toggleWatchlist";
 import { useState } from "react";
+import { useToast } from "@/components/toast/useToast";
 
 interface MovieCardProps {
   movie: {
@@ -21,6 +22,8 @@ interface MovieCardProps {
 
 const MovieCard = ({ movie, isInWatchlist, onRemoved }: MovieCardProps) => {
 
+  const { showToast } = useToast();
+
   const [isMovieInWatchlist, setIsMovieInWatchlist] =
     useState(isInWatchlist);
 
@@ -28,15 +31,16 @@ const MovieCard = ({ movie, isInWatchlist, onRemoved }: MovieCardProps) => {
     const result = await toggleWatchlist(movie);
 
     if (!result.success) {
-      alert(result.message);
-      return;
+      return; // Stop here
     }
 
     if (result.action === "added") {
+      showToast("Added to Watchlist");
       setIsMovieInWatchlist(true);
     }
 
     if (result.action === "removed") {
+      showToast("Removed from Watchlist");
       setIsMovieInWatchlist(false);
       onRemoved?.(movie.id);
     }

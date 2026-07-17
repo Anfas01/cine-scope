@@ -70,7 +70,7 @@ export default async function Home({ searchParams }: HomeProps) {
         {movies.results.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 px-6 pb-24 sm:grid-cols-3 sm:px-0 lg:grid-cols-4">
             {movies.results.map((movie: MovieProps) => (
-              <MovieCard key={movie.id} movie={movie} isInWatchlist={watchlistIds.has(movie.id)}/>
+              <MovieCard key={movie.id} movie={movie} isInWatchlist={watchlistIds.has(movie.id)} />
             ))}
           </div>
         ) : (
