@@ -53,7 +53,7 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
           prev.filter((toast) => toast.id !== id)
         );
       }, 300);
-    }, 3000);
+    }, 1500);
   };
 
   return (

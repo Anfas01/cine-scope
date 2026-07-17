@@ -22,7 +22,6 @@ import {
   useRef,
 } from "react";
 import { logout } from "@/actions/logout";
-import { toast } from "sonner";
 
 interface NavbarProps {
   user: {
@@ -113,7 +112,6 @@ const Navbar = ({ user }: NavbarProps) => {
 
   const handleLogout = async () => {
     await logout();
-    toast.success("You have been logged out.");
   };
 
   const placeholder =

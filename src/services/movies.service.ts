@@ -11,3 +11,7 @@ export async function searchMovie(searchQuery: string) {
     `/search/movie?query=${encodeURIComponent(searchQuery)}`
   );
 }
+
+export async function getMovieDetails(id: string) {
+  return tmdbFetch(`/movie/${id}`);
+}
