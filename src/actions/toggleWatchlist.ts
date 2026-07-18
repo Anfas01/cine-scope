@@ -1,18 +1,11 @@
-'use server';
+"use server";
 
 import { connectDB } from "@/lib/mongodb";
 import { getCurrentUser } from "@/lib/auth";
 import Watchlist from "@/models/watchlistModel";
+import type { MovieSummary } from "@/types/movie";
 
-interface Movie {
-  id: number;
-  title: string;
-  poster_path: string;
-  vote_average: number;
-  release_date: string;
-}
-
-export default async function toggleWatchlist(movie: Movie) {
+export default async function toggleWatchlist(movie: MovieSummary) {
   await connectDB();
 
   const user = await getCurrentUser();

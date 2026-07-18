@@ -2,15 +2,10 @@
 
 import { Bookmark } from "lucide-react";
 import { useWatchlist } from "@/hooks/useWatchlist";
+import type { MovieSummary } from "@/types/movie";
 
 interface WatchlistButtonProps {
-  movie: {
-    id: number;
-    title: string;
-    poster_path: string;
-    vote_average: number;
-    release_date: string;
-  };
+  movie: MovieSummary;
   isInWatchlist: boolean;
 }
 

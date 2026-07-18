@@ -2,7 +2,7 @@
 
 import Toast from "./Toast";
 import { ToastContext } from "./ToastContext";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Toast as ToastType } from "./types";
 
 interface ToastProviderProps {
@@ -11,7 +11,24 @@ interface ToastProviderProps {
 
 const ToastProvider = ({ children }: ToastProviderProps) => {
   const [toasts, setToasts] = useState<ToastType[]>([]);
+  const timeoutIds = useRef(new Set<ReturnType<typeof setTimeout>>());
 
+  useEffect(() => {
+    const scheduledTimeouts = timeoutIds.current;
+
+    return () => {
+      scheduledTimeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+    };
+  }, []);
+
+  const scheduleTimeout = (callback: () => void, delay: number) => {
+    const timeoutId = setTimeout(() => {
+      timeoutIds.current.delete(timeoutId);
+      callback();
+    }, delay);
+
+    timeoutIds.current.add(timeoutId);
+  };
 
   const showToast = (message: string) => {
     const id = crypto.randomUUID();
@@ -22,11 +39,9 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
       isVisible: false,
     };
 
-    // Add the toast in a hidden state
     setToasts((prev) => [...prev, newToast]);
 
-    // On the next animation frame, make it visible
-    setTimeout(() => {
+    scheduleTimeout(() => {
       setToasts((prev) =>
         prev.map((toast) =>
           toast.id === id
@@ -36,9 +51,7 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
       );
     }, 10);
 
-    // Start the timer to hide it after 3 seconds
-    setTimeout(() => {
-      // Trigger the exit animation
+    scheduleTimeout(() => {
       setToasts((prev) =>
         prev.map((toast) =>
           toast.id === id
@@ -47,8 +60,7 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
         )
       );
 
-      // Remove it after the animation finishes
-      setTimeout(() => {
+      scheduleTimeout(() => {
         setToasts((prev) =>
           prev.filter((toast) => toast.id !== id)
         );

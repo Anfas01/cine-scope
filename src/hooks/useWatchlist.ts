@@ -4,9 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toggleWatchlist from "@/actions/toggleWatchlist";
 import { useToast } from "@/components/toast/useToast";
+import type { MovieSummary } from "@/types/movie";
 
 export function useWatchlist(
-  movie: any,
+  movie: MovieSummary,
   initialState: boolean,
   onRemoved?: (movieId: number) => void
 ) {

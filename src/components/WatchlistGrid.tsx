@@ -2,30 +2,20 @@
 
 import { useState } from "react";
 import MovieCard from "./MovieCard";
+import type { MovieSummary } from "@/types/movie";
 
-interface Movie {
-  id: number;
-  title: string;
-  poster_path: string;
-  vote_average: number;
-  release_date: string;
-}
-
-interface Props {
-  initialMovies: Movie[];
+interface WatchlistGridProps {
+  initialMovies: MovieSummary[];
 }
 
 export default function WatchlistGrid({
   initialMovies,
-}: Props) {
-  const [movies, setMovies] =
-    useState(initialMovies);
+}: WatchlistGridProps) {
+  const [movies, setMovies] = useState(initialMovies);
 
   const handleMovieRemoved = (movieId: number) => {
-    setMovies((prevMovies) =>
-      prevMovies.filter(
-        (movie) => movie.id !== movieId
-      )
+    setMovies((previousMovies) =>
+      previousMovies.filter((movie) => movie.id !== movieId)
     );
   };
 

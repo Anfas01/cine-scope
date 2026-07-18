@@ -3,14 +3,7 @@ import MovieCard from "@/components/MovieCard";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Watchlist from "@/models/watchlistModel";
-
-interface MovieProps {
-  id: number;
-  title: string;
-  poster_path: string;
-  vote_average: number;
-  release_date: string;
-}
+import type { MovieSummary } from "@/types/movie";
 
 type HomeProps = {
   searchParams: Promise<{
@@ -69,7 +62,7 @@ export default async function Home({ searchParams }: HomeProps) {
         {/* Movies */}
         {movies.results.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 px-6 pb-24 sm:grid-cols-3 sm:px-0 lg:grid-cols-4">
-            {movies.results.map((movie: MovieProps) => (
+            {movies.results.map((movie: MovieSummary) => (
               <MovieCard key={movie.id} movie={movie} isInWatchlist={watchlistIds.has(movie.id)} />
             ))}
           </div>

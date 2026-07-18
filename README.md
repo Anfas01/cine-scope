@@ -29,8 +29,6 @@ Key implemented features:
 | External service | The Movie Database (TMDB) API and TMDB image CDN |
 | Tooling | TypeScript, ESLint 9 with Next.js configs, PostCSS, React Compiler |
 
-`sonner` is declared as a dependency, but the current implementation uses the project's own toast provider rather than importing Sonner.
-
 ## Project Structure
 
 ```text
@@ -209,7 +207,7 @@ No automated test files or test script are present. The available verification c
 npm run lint
 ```
 
-At the time this README was written, `npm.cmd run lint` reports two errors (a synchronous `setState` call inside a `Navbar` effect and an explicit `any` in `useWatchlist`) and five unused-import warnings. Address those findings before treating lint as a passing quality gate.
+Run lint before submitting changes to ensure the configured quality checks continue to pass.
 
 ## Build
 
@@ -306,19 +304,15 @@ The code follows a lightweight layered structure: App Router pages and layouts c
 ### Potential improvements
 
 - Add automated tests for Server Actions, authentication behavior, TMDB failure states, and watchlist ownership/mutations.
-- Resolve the current ESLint errors and unused imports.
-- Add robust input/type validation for TMDB responses and replace `any` in `useWatchlist` with a movie type.
+- Add robust input/type validation for TMDB responses.
 - Handle absent TMDB fields (for example, image paths, dates, numeric ratings, or genres) before calling string/number methods in UI components.
 - Add user-friendly error boundaries or error states for TMDB/database failures.
 - Add unique compound indexing for watchlist entries (`user`, `movieId`) if duplicate prevention must be enforced at the database layer.
-- Replace the placeholder metadata description and remove unused dependencies/components if they remain unnecessary.
+- Add a password-reset flow, email verification, and role-based authorization if the application expands beyond personal watchlists.
 
 ### Technical debt noticed
 
-- ESLint currently fails with two errors and reports five warnings.
-- `Nav.tsx` is present but is not imported by the rendered layouts; its mobile navigation is therefore not active in the current app flow.
 - The navbar contains a Settings button without an implemented action, and retains a `/favorites` placeholder branch although no favorites route is present.
-- `sonner` is installed but unused; the root layout also contains CSS targeting Sonner's toaster attribute while the application renders a custom toast implementation.
 - The Mongoose schemas do not define a compound uniqueness constraint for a user's movie entries.
 - No migrations, tests, CI/CD, Docker setup, or deployment configuration are included.
 

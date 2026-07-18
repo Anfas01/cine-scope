@@ -16,11 +16,7 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import {
-  useState,
-  useEffect,
-  useRef,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import { logout } from "@/actions/logout";
 
 interface NavbarProps {
@@ -31,9 +27,71 @@ interface NavbarProps {
   } | null;
 }
 
+interface SearchControlsProps {
+  initialQuery: string;
+  placeholder: string;
+}
+
+const SearchControls = ({
+  initialQuery,
+  placeholder,
+}: SearchControlsProps) => {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+
+  const showClearButton =
+    initialQuery !== "" && searchQuery.trim() === initialQuery;
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+
+    if (event.target.value === "") {
+      router.push("/");
+    }
+  };
+
+  const handleSearch = () => {
+    const query = searchQuery.trim();
+
+    router.push(query ? `/?query=${encodeURIComponent(query)}` : "/");
+  };
+
+  const handleClear = () => {
+    setSearchQuery("");
+    router.push("/");
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  return (
+    <div className="flex flex-1 justify-center px-2">
+      <div className="flex w-full max-w-[180px] items-center rounded-full border border-green-900 bg-neutral-900 px-3 py-2 transition focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/20 sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-xl">
+        <input
+          value={searchQuery}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          type="text"
+          placeholder={placeholder}
+          className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
+        />
+
+        <button
+          onClick={showClearButton ? handleClear : handleSearch}
+          className="ml-2 shrink-0 text-gray-400 transition hover:text-green-500"
+        >
+          {showClearButton ? <X size={18} /> : <Search size={18} />}
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const Navbar = ({ user }: NavbarProps) => {
   const pathname = usePathname();
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const navItems = [
@@ -43,14 +101,9 @@ const Navbar = ({ user }: NavbarProps) => {
 
   const currentQuery = searchParams.get("query") ?? "";
 
-  const [searchQuery, setSearchQuery] = useState("");
   const [accountOpen, setAccountOpen] = useState(false);
 
   const accountRef = useRef<HTMLLIElement>(null);
-
-  useEffect(() => {
-    setSearchQuery(currentQuery);
-  }, [currentQuery]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -71,44 +124,6 @@ const Navbar = ({ user }: NavbarProps) => {
       );
     };
   }, []);
-
-  const showClearButton =
-    currentQuery !== "" &&
-    searchQuery.trim() === currentQuery;
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSearchQuery(e.target.value);
-
-    if (e.target.value === "") {
-      router.push("/");
-    }
-  };
-
-  const handleSearch = () => {
-    const query = searchQuery.trim();
-
-    if (!query) {
-      router.push("/");
-      return;
-    }
-
-    router.push(`/?query=${encodeURIComponent(query)}`);
-  };
-
-  const handleClear = () => {
-    setSearchQuery("");
-    router.push("/");
-  };
-
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  };
 
   const handleLogout = async () => {
     await logout();
@@ -144,38 +159,11 @@ const Navbar = ({ user }: NavbarProps) => {
           </h1>
         </Link>
 
-        {/* Search */}
-        <div className="flex flex-1 justify-center px-2">
-          <div className="flex w-full max-w-[180px] items-center rounded-full border border-green-900 bg-neutral-900 px-3 py-2 transition focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/20 sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-xl">
-            <input
-              value={searchQuery}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-              type="text"
-              placeholder={
-                pathname === "/"
-                  ? "Search movies..."
-                  : placeholder
-              }
-              className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
-            />
-
-            <button
-              onClick={
-                showClearButton
-                  ? handleClear
-                  : handleSearch
-              }
-              className="ml-2 shrink-0 text-gray-400 transition hover:text-green-500"
-            >
-              {showClearButton ? (
-                <X size={18} />
-              ) : (
-                <Search size={18} />
-              )}
-            </button>
-          </div>
-        </div>
+        <SearchControls
+          key={currentQuery}
+          initialQuery={currentQuery}
+          placeholder={pathname === "/" ? "Search movies..." : placeholder}
+        />
 
         {/* Navigation */}
         <nav className="shrink-0">

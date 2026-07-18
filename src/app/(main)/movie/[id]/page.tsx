@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Bookmark, Calendar, Clock3, Star } from "lucide-react";
+import { Calendar, Clock3, Star } from "lucide-react";
 import { getMovieDetails } from "@/services/movies.service";
 import { IMAGE_BASE_URL } from "@/lib/tmdb";
 import WatchlistButton from "@/components/WatchlistButton";

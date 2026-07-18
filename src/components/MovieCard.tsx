@@ -1,28 +1,20 @@
-'use client';
+"use client";
 
 import Image from "next/image";
-import { Star } from "lucide-react";
-import { IMAGE_BASE_URL } from "@/lib/tmdb";
-import { Bookmark } from "lucide-react";
-import toggleWatchlist from "@/actions/toggleWatchlist";
-import { useWatchlist } from "@/hooks/useWatchlist";
-import { useToast } from "@/components/toast/useToast";
 import Link from "next/link";
+import { Star } from "lucide-react";
+import { Bookmark } from "lucide-react";
+import { IMAGE_BASE_URL } from "@/lib/tmdb";
+import { useWatchlist } from "@/hooks/useWatchlist";
+import type { MovieSummary } from "@/types/movie";
 
 interface MovieCardProps {
-  movie: {
-    id: number;
-    title: string;
-    poster_path: string;
-    vote_average: number;
-    release_date: string;
-  };
+  movie: MovieSummary;
   isInWatchlist: boolean;
   onRemoved?: (movieId: number) => void;
 }
 
 const MovieCard = ({ movie, isInWatchlist, onRemoved }: MovieCardProps) => {
-
   const {
     isInWatchlist: isMovieInWatchlist,
     toggle,
