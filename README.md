@@ -202,8 +202,8 @@ Some of the challenges I solved while building CineScope:
 **Anfas**
 
 - GitHub: https://github.com/Anfas01
-- Portfolio: *(Add your portfolio when available)*
-- LinkedIn: *(Add your LinkedIn profile)*
+- Portfolio: https://anfas01-github-io.vercel.app/
+- LinkedIn: www.linkedin.com/in/-anfas-m
 
 ---
 
