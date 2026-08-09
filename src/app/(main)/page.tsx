@@ -75,10 +75,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <span className="text-green-500">Movies</span>
           </h1>
 
-          <p className="mx-auto mt-3 max-w-2xl text-base text-gray-400 sm:text-lg">
-            Discover trending hits, popular favorites, top-rated films, and
-            upcoming releases.
-          </p>
+          <div className="mx-auto mt-4 h-0.75 w-24 rounded-full bg-linear-to-r from-transparent via-green-500 to-transparent" />
         </div>
 
         {/* Trending */}

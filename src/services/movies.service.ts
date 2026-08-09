@@ -1,26 +1,54 @@
 import { tmdbFetch } from "../lib/tmdb";
 
+const MOVIES_PER_CATEGORY = 8;
+
 export async function getTrendingMovies() {
-  return tmdbFetch("/trending/movie/week");
+  const data = await tmdbFetch("/trending/movie/week");
+
+  return {
+    ...data,
+    results: data.results.slice(0, MOVIES_PER_CATEGORY),
+  };
 }
 
 export async function getPopularMovies() {
-  return tmdbFetch("/movie/popular");
+  const data = await tmdbFetch("/movie/popular");
+
+  return {
+    ...data,
+    results: data.results.slice(0, MOVIES_PER_CATEGORY),
+  };
 }
 
 export async function getTopRatedMovies() {
-  return tmdbFetch("/movie/top_rated");
+  const data = await tmdbFetch("/movie/top_rated");
+
+  return {
+    ...data,
+    results: data.results.slice(0, MOVIES_PER_CATEGORY),
+  };
 }
 
 export async function getUpcomingMovies() {
-  return tmdbFetch("/movie/upcoming");
+  const data = await tmdbFetch("/movie/upcoming");
+
+  return {
+    ...data,
+    results: data.results.slice(0, MOVIES_PER_CATEGORY),
+  };
 }
 
 export async function searchMovie(searchQuery: string) {
-  if (!searchQuery.trim()) return;
+  const query = searchQuery.trim();
+
+  if (!query) {
+    return {
+      results: [],
+    };
+  }
 
   return tmdbFetch(
-    `/search/movie?query=${encodeURIComponent(searchQuery)}`
+    `/search/movie?query=${encodeURIComponent(query)}`
   );
 }
 
