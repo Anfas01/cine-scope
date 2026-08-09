@@ -69,7 +69,7 @@ const SearchControls = ({
 
   return (
     <div className="flex flex-1 justify-center px-2">
-      <div className="flex w-full max-w-[180px] items-center rounded-full border border-green-900 bg-neutral-900 px-3 py-2 transition focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/20 sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-xl">
+      <div className="flex w-full max-w-180px items-center rounded-full border border-green-900 bg-neutral-900 px-3 py-2 transition focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/20 sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-xl">
         <input
           value={searchQuery}
           onChange={handleChange}
