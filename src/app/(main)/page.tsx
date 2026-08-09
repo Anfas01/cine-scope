@@ -43,9 +43,8 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
           <MovieGrid
             title="Search Results"
-            description={`${movies.results.length} result${
-              movies.results.length !== 1 ? "s" : ""
-            } found for "${searchQuery}".`}
+            description={`${movies.results.length} result${movies.results.length !== 1 ? "s" : ""
+              } found for "${searchQuery}".`}
             movies={movies.results}
             watchlistIds={watchlistIds}
           />
@@ -69,6 +68,19 @@ export default async function Home({ searchParams }: HomeProps) {
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        {/* Page Heading */}
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+            <span className="text-white">Explore </span>
+            <span className="text-green-500">Movies</span>
+          </h1>
+
+          <p className="mx-auto mt-3 max-w-2xl text-base text-gray-400 sm:text-lg">
+            Discover trending hits, popular favorites, top-rated films, and
+            upcoming releases.
+          </p>
+        </div>
+
         {/* Trending */}
         <MovieGrid
           title="Trending Movies"
