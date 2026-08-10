@@ -6,3 +6,8 @@ body {
   max-width: 100%;
   overflow-x: hidden;
 }
+
+::selection {
+  background-color: rgb(34, 197, 94);
+  color: black;
+}

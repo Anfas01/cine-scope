@@ -37,6 +37,14 @@ export default function RootLayout({
           offset={80}
           richColors
           closeButton={false}
+          toastOptions={{
+            classNames: {
+              toast:
+                "w-fit max-w-[200px] px-2.5 py-1.5 rounded-lg",
+              title: "text-xs font-medium",
+              description: "text-[11px]",
+            },
+          }}
         />
       </body>
     </html>
