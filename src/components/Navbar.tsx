@@ -68,7 +68,7 @@ const SearchControls = ({
   };
 
   return (
-    <div className="flex flex-1 justify-center px-2">
+    <div className="flex flex-1 justify-center px-2 min-w-0">
       <div className="flex w-full max-w-180px items-center rounded-full border border-green-900 bg-neutral-900 px-3 py-2 transition focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/20 sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-xl">
         <input
           value={searchQuery}
@@ -137,7 +137,8 @@ const Navbar = ({ user }: NavbarProps) => {
         : "Search movies...";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-green-900/40 bg-black/90 backdrop-blur-md">
+    // ADDED: w-full to ensure header strictly respects viewport bounds
+    <header className="sticky top-0 z-50 w-full border-b border-green-900/40 bg-black/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-3 sm:h-18 sm:px-5">
         {/* Logo */}
         <Link

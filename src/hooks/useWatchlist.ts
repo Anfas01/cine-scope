@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toggleWatchlist from "@/actions/toggleWatchlist";
-import { useToast } from "@/components/toast/useToast";
 import type { MovieSummary } from "@/types/movie";
 
 export function useWatchlist(
@@ -12,7 +11,6 @@ export function useWatchlist(
   onRemoved?: (movieId: number) => void
 ) {
   const router = useRouter();
-  const { showToast } = useToast();
 
   const [isInWatchlist, setIsInWatchlist] = useState(initialState);
 
@@ -23,12 +21,12 @@ export function useWatchlist(
 
     if (result.action === "added") {
       setIsInWatchlist(true);
-      showToast("Added to Watchlist");
+      alert("Added to Watchlist");
     }
 
     if (result.action === "removed") {
       setIsInWatchlist(false);
-      showToast("Removed from Watchlist");
+      alert("Removed from Watchlist");
       onRemoved?.(movie.id);
     }
 
