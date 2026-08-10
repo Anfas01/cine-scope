@@ -69,7 +69,7 @@ export default async function Home({ searchParams }: HomeProps) {
     <main className="min-h-screen bg-[#0a0a0a] text-white">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Page Heading */}
-        <div className="mb-12 text-center">
+        <div className="mb-8 text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
             <span className="text-white">Explore </span>
             <span className="text-green-500">Movies</span>

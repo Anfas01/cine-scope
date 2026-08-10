@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import { Suspense } from "react";
 import { getCurrentUser } from "@/lib/auth";
 
 export default async function MainLayout({
@@ -16,17 +15,17 @@ export default async function MainLayout({
 
   return (
     <>
-      <Suspense>
-        <Navbar
-          user={{
-            id: user._id.toString(),
-            name: user.name,
-            email: user.email,
-          }}
-        />
-      </Suspense>
+      <Navbar
+        user={{
+          id: user._id.toString(),
+          name: user.name,
+          email: user.email,
+        }}
+      />
 
-      {children}
+      <main>
+        {children}
+      </main>
     </>
   );
 }
