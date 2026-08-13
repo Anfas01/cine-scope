@@ -1,39 +1,67 @@
 "use client";
 
-import { Bookmark } from "lucide-react";
-import { useWatchlist } from "@/hooks/useWatchlist";
-import type { MovieSummary } from "@/types/movie";
+import { Bookmark, LoaderCircle } from "lucide-react";
 
 interface WatchlistButtonProps {
-  movie: MovieSummary;
   isInWatchlist: boolean;
+  isLoading: boolean;
+  onToggle: () => void;
 }
 
 export default function WatchlistButton({
-  movie,
   isInWatchlist,
+  isLoading,
+  onToggle,
 }: WatchlistButtonProps) {
-  const {
-    isInWatchlist: isMovieInWatchlist,
-    toggle,
-  } = useWatchlist(movie, isInWatchlist);
-
   return (
     <button
-      onClick={toggle}
-      className="flex items-center justify-center gap-2 rounded-xl border border-neutral-800 bg-neutral-950 px-5 py-2.5 text-xs sm:text-sm font-semibold tracking-wide text-green-400 transition-all duration-300 hover:border-green-500/40 hover:bg-green-500/5 hover:shadow-[0_0_15px_rgba(34,197,94,0.12)] cursor-pointer group w-full xs:w-auto"
-      aria-label="Add to Watchlist"
-    >
-      <Bookmark
-        size={16}
-        className={
-          isMovieInWatchlist
-            ? "fill-green-500 transition-transform group-hover:scale-105"
-            : "transition-transform group-hover:scale-105"
+      onClick={onToggle}
+      disabled={isLoading}
+      aria-label={
+        isInWatchlist
+          ? "Remove from Watchlist"
+          : "Add to Watchlist"
+      }
+      className={`
+        group flex h-10 w-full cursor-pointer items-center justify-center
+        gap-2 rounded-lg border px-4 text-xs font-medium
+        transition-all duration-200 sm:text-sm
+        disabled:cursor-not-allowed disabled:opacity-60
+
+        ${
+          isInWatchlist
+            ? "border-green-500/30 bg-green-500/10 text-green-400 hover:border-green-500/50 hover:bg-green-500/15"
+            : "border-neutral-800 bg-neutral-950 text-neutral-400 hover:border-neutral-700 hover:bg-neutral-800/70 hover:text-white"
         }
-      />
+      `}
+    >
+      {isLoading ? (
+        <LoaderCircle
+          size={15}
+          className="animate-spin text-green-400"
+        />
+      ) : (
+        <Bookmark
+          size={15}
+          className={`
+            transition-all duration-200
+            ${
+              isInWatchlist
+                ? "fill-green-400 text-green-400"
+                : "text-neutral-500 group-hover:text-green-400"
+            }
+          `}
+        />
+      )}
+
       <span>
-        {isMovieInWatchlist ? "In Watchlist" : "Add to Watchlist"}
+        {isLoading
+          ? isInWatchlist
+            ? "Removing..."
+            : "Adding..."
+          : isInWatchlist
+            ? "In Watchlist"
+            : "Add to Watchlist"}
       </span>
     </button>
   );

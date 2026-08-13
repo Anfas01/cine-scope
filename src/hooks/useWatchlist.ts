@@ -14,28 +14,39 @@ export function useWatchlist(
   const router = useRouter();
 
   const [isInWatchlist, setIsInWatchlist] = useState(initialState);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggle = async () => {
-    const result = await toggleWatchlist(movie);
+    // Prevent multiple clicks
+    if (isLoading) return;
 
-    if (!result.success) return;
+    setIsLoading(true);
 
-    if (result.action === "added") {
-      setIsInWatchlist(true);
-      toast.success("Added to Watchlist");
+    try {
+      const result = await toggleWatchlist(movie);
+
+      if (!result.success) return;
+
+      if (result.action === "added") {
+        setIsInWatchlist(true);
+        toast.success("Added to Watchlist");
+      }
+
+      if (result.action === "removed") {
+        setIsInWatchlist(false);
+        toast.success("Removed from Watchlist");
+        onRemoved?.(movie.id);
+      }
+
+      router.refresh();
+    } finally {
+      setIsLoading(false);
     }
-
-    if (result.action === "removed") {
-      setIsInWatchlist(false);
-      toast.success("Removed from Watchlist");
-      onRemoved?.(movie.id);
-    }
-
-    router.refresh();
   };
 
   return {
     isInWatchlist,
+    isLoading,
     toggle,
   };
 }

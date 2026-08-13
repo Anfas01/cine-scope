@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Star, Bookmark } from "lucide-react";
+import { Star } from "lucide-react";
 import { IMAGE_BASE_URL } from "@/lib/tmdb";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import type { MovieSummary } from "@/types/movie";
+import WatchlistButton from "./WatchlistButton";
 
 interface MovieCardProps {
   movie: MovieSummary;
@@ -20,6 +21,7 @@ const MovieCard = ({
 }: MovieCardProps) => {
   const {
     isInWatchlist: isMovieInWatchlist,
+    isLoading,
     toggle,
   } = useWatchlist(movie, isInWatchlist, onRemoved);
 
@@ -28,9 +30,10 @@ const MovieCard = ({
     : "/placeholder-movie.png";
 
   return (
-    <div className="group overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900/80 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-green-500/30 hover:shadow-green-500/10">
+    <div className="group overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900/80 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-green-500/30 hover:shadow-[0_10px_40px_rgba(0,0,0,0.35)]">
+
       {/* Poster */}
-      <div className="relative aspect-2/3 w-full overflow-hidden">
+      <div className="relative aspect-3/4 w-full overflow-hidden bg-neutral-950">
         <Image
           src={posterUrl}
           alt={movie.title}
@@ -39,53 +42,58 @@ const MovieCard = ({
           className="object-cover transition duration-500 group-hover:scale-105"
         />
 
-        {/* Rating */}
-        <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/80 px-3 py-1 text-sm font-semibold text-green-400 backdrop-blur">
-          <Star
-            size={14}
-            className="fill-green-400 text-green-400"
-          />
-          {movie.vote_average.toFixed(1)}
-        </div>
+        {/* Poster gradient */}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
       </div>
 
       {/* Info */}
-      <div className="space-y-4 p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h2 className="line-clamp-1 text-lg font-semibold text-white transition-colors group-hover:text-green-400">
-              {movie.title}
-            </h2>
+      <div className="p-3.5 sm:p-4">
 
-            <p className="mt-1 text-sm text-gray-500">
+        {/* Title + Year + Rating */}
+        <div className="min-w-0">
+          <h2 className="line-clamp-1 text-base font-semibold text-white transition-colors duration-300 group-hover:text-green-400 sm:text-lg">
+            {movie.title}
+          </h2>
+
+          <div className="mt-1 flex items-center gap-2 text-xs text-neutral-500">
+            <span>
               {movie.release_date
                 ? movie.release_date.slice(0, 4)
                 : "N/A"}
-            </p>
-          </div>
+            </span>
 
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toggle();
-            }}
-            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-transparent bg-neutral-800 text-green-500 transition-all duration-300 hover:border-green-500/30 hover:bg-green-500/10 hover:shadow-[0_0_12px_rgba(34,197,94,0.25)]"
-            aria-label={
-              isMovieInWatchlist
-                ? "Remove from Watchlist"
-                : "Add to Watchlist"
-            }
-          >
-            <Bookmark
-              size={18}
-              className={isMovieInWatchlist ? "fill-green-500" : ""}
-            />
-          </button>
+            <span className="text-neutral-700">
+              •
+            </span>
+
+            <div className="flex items-center gap-1">
+              <Star
+                size={11}
+                className="fill-green-500 text-green-500"
+              />
+
+              <span className="text-neutral-400">
+                {movie.vote_average.toFixed(1)}
+              </span>
+            </div>
+          </div>
         </div>
 
-        <Link href={`/movie/${movie.id}`} className="block">
-          <button className="w-full cursor-pointer rounded-xl border border-green-500/40 bg-green-500/10 px-4 py-2 text-sm font-medium text-green-400 transition-all duration-300 hover:border-green-500 hover:bg-green-500 hover:text-black">
+        {/* Watchlist */}
+        <div className="mt-3">
+          <WatchlistButton
+            isInWatchlist={isMovieInWatchlist}
+            isLoading={isLoading}
+            onToggle={toggle}
+          />
+        </div>
+
+        {/* View Details */}
+        <Link
+          href={`/movie/${movie.id}`}
+          className="mt-2 block"
+        >
+          <button className="w-full cursor-pointer rounded-xl border border-green-500/30 bg-green-500/5 px-4 py-2 text-xs font-semibold tracking-wide text-green-400 transition-all duration-300 hover:border-green-500 hover:bg-green-500 hover:text-black sm:text-sm">
             View Details
           </button>
         </Link>
